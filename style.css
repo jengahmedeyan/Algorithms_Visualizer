@@ -1,0 +1,295 @@
+/* 
+*,
+*::before,
+*::after {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body{
+  user-select: none;
+}
+
+.container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  gap: 2rem;
+}
+
+.box_container {
+  width: 800px;
+  height: 500px;
+  display: flex;
+  align-items: end;
+  gap: 0.45rem;
+  border-radius: 10px;
+}
+
+.box_container .bar{
+  width: 20px;
+  background-color: black;
+  transition: all .3s ease;
+} 
+
+.code-container {
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f8f9fa;
+  overflow-x: auto;
+  width: 600px;
+  height: 100%;
+}
+
+#algorithmCode {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 20px;
+  line-height: 1.5;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.highlighted {
+  background-color: yellow;
+  font-weight: bold;
+}
+
+
+.panels{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+.buttons_container{
+  display: flex;
+  gap: .5rem;
+  justify-content: start;
+}
+.controls{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: .5rem;
+}
+button{
+  padding: .5rem;
+  outline: none;
+  border: none;
+  border-radius: .5rem;
+  background-color: rgb(143, 4, 4);
+  color: white;
+  text-transform: uppercase;
+  font-size: small;
+  font-weight: 800;
+}
+select{
+  padding: .5rem 0;
+  outline: none;
+  border: none;
+  border-radius: .5rem;
+  background-color: rgb(143, 4, 4);
+  color: white;
+  font-size: small;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+select:focus {
+  outline: none;
+  border-color: #07f;
+  box-shadow: 0 0 0 2px rgba(0,119,255,0.2);
+}
+select option {
+  color: #223254;
+}
+
+.results{
+  background-color: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-size: 18px;
+  max-width: 100%;
+}
+
+#sortingResult{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.info{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.info > div{
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+} */
+
+
+
+
+
+*,
+*::before,
+*::after {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  user-select: none;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px; 
+  margin: 0 auto;
+  padding: 5px;
+}
+
+
+
+.box_container {
+  width: 50vw;
+  max-width: 800px;
+  height: 50vh;
+  display: flex;
+  align-items: end;
+  gap: 0.45rem;
+  border-radius: 1px;
+  overflow: hidden; 
+}
+
+.box_container .bar {
+  width: 5%;
+  background-color: black;
+  transition: all 0.3s ease;
+}
+
+.code-container {
+  margin-top: 20px;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f8f9fa;
+  overflow-x: auto;
+  width: 70vw;
+  max-width: 500px;
+  height: 450px;
+  overflow: hidden;
+}
+
+.panels {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+button,
+select {
+  padding: 0.75rem;
+  outline: none;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: rgb(143, 4, 4);
+  color: white;
+  text-transform: uppercase;
+  font-size: small;
+  font-weight: 800;
+}
+
+select:focus {
+  outline: none;
+  border-color: #07f;
+  box-shadow: 0 0 0 2px rgba(0, 119, 255, 0.2);
+}
+
+select option {
+  color: #223254;
+}
+
+
+.results{
+  background-color: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-size: 18px;
+  max-width: 100%;
+  margin-top: 2rem;
+}
+
+#sortingResult{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.info{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.info > div{
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+} 
+
+
+#algorithmCode {
+  font-family: 'Courier New', Courier, monospace;
+  line-height: 1.5;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .container {
+padding: .5rem;
+  }
+
+  .box_container,
+  .code-container {
+    width: 90vw;
+    max-width: none;
+  }
+  .box_container .bar{
+    width: 10%;
+  }
+  .button_row {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .panels {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .controls {
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 15rem;
+  }
+}

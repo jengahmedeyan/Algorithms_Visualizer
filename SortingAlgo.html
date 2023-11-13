@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Sorting Visualizer</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="controls">
+        <label for="algorithmSelect">Algorithm:</label>
+        <select id="algorithmSelect">
+          <option value="bubble">Bubble Sort</option>
+          <option value="selection">Selection Sort</option>
+          <option value="insertion">Insertion Sort</option>
+        </select>
+
+        <label for="speedSlider">Speed:</label>
+        <input type="range" id="speedSlider" min="100" max="500" value="100" />
+        <div class="button_row">
+          <button onclick="reset()">Reset</button>
+          <button onclick="startSorting()">Start</button>
+          <button onclick="stopSorting()">Stop</button>
+        </div>
+
+      </div>
+
+      <div class="panels">
+        <div class="box_container"></div>
+
+        <div class="code-container">
+          <pre>
+          <code id="algorithmCode" class="html"></code>
+        </pre>
+        </div>
+      </div>
+      <div class="results">
+
+      </div>
+    </div>
+    <script src="./sortingAlgo.js"> </script>
+      </body>
+</html>

@@ -126,6 +126,11 @@ select option {
   margin: 0;
 }
 
+.highlighted {
+  background-color: yellow;
+  font-weight: bold;
+}
+
 @media (max-width: 768px) {
   .container {
 padding: .5rem;

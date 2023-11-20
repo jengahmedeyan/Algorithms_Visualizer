@@ -1,0 +1,222 @@
+
+*,
+*::before,
+*::after {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f2f2f2;
+}
+
+.comment { color: green; }
+.string { color: brown; }
+.keyword { color: blue; }
+
+.container {
+    padding: 20px;
+}
+
+.controls {
+    margin-bottom: 20px;
+}
+
+.user_array{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 0 auto;
+}
+
+.user_array button{
+    flex: 1;
+}
+.user_array label{
+flex: 1
+}
+.user_array input{
+    flex: 5;
+    font-size: large;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+select,
+input[type="range"],
+input[type="text"],
+button {
+    width: 100%;
+    padding: 0.75rem;
+    outline: none;
+    border: none;
+    border-radius: 0.5rem;
+}
+input[type="range"]{
+    cursor: pointer;
+}
+
+button,
+select {
+
+    background-color: rgb(143, 4, 4);
+    color: white;
+    text-transform: uppercase;
+    font-size: small;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.button_row {
+    display: flex;
+    justify-content: space-between;
+    gap: .75rem;
+}
+
+
+.panels {
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
+}
+
+.box_container {
+    width: 100%;
+    height: 50vh;
+    display: flex;
+    align-items: end;
+    gap: 0.45rem;
+    border-radius: 1px;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+}
+
+.bar {
+    width: 5%;
+    background-color: black;
+    transition: height 0.3s ease;
+}
+
+.bar.comparing {
+    background-color: #ffcc00;
+}
+
+.bar.swapping {
+    background-color: #00cc66;
+}
+
+.code-container {
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    font-size: large;
+    min-height: 30vh;
+    overflow-x: auto;
+}
+
+
+
+.bar {
+    width: 100%;
+    background-color: black;
+    transition: all 0.3s ease;
+}
+
+.code-container pre {
+    margin-top: 2rem;
+    text-align: start;
+}
+
+.highlighted {
+    background-color: rgb(143, 4, 4);
+    font-weight: bold;
+    color: white;
+}
+
+#algorithmCode {
+    font-family: 'Courier New', Courier, monospace;
+    line-height: 1.5;
+}
+
+.results {
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+
+}
+.tab {
+    overflow: hidden;
+    background-color: #f1f1f1;
+    display: flex;
+}
+
+.tab button {
+    background-color: inherit;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: 0.3s;
+    color: #000;
+}
+
+.tab button:hover{
+    background-color: rgb(143, 4, 4);
+    color: #fff;
+}
+
+.active{
+    background-color: rgb(143, 4, 4);
+    color: #fff;
+}
+
+
+@media screen and (min-width: 768px) {
+    .container {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 30px;
+    }
+
+    .controls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1r em;
+    }
+
+    .panels {
+        display: flex;
+        flex-direction: column;
+        gap: .5rem;
+    }
+
+    .box_container {
+        height: 35vh;
+        width: 100%;
+    }
+
+    .code-container {
+        width: 100%;
+        padding: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f8f9fa;
+        overflow: hidden;
+    }
+
+    .results {
+        margin-top: 40px;
+    }
+}

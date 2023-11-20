@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Sorting Visualizer</title>
-    <link rel="stylesheet" href="./style.css" />
+    <title>Algorithms Visualizer</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="container">
@@ -15,31 +15,44 @@
           <option value="bubble">Bubble Sort</option>
           <option value="selection">Selection Sort</option>
           <option value="insertion">Insertion Sort</option>
+          <option value="merge">Merge Sort</option>
+
         </select>
 
         <label for="speedSlider">Speed:</label>
-        <input type="range" id="speedSlider" min="100" max="500" value="100" />
+        <input type="range" id="speedSlider" min="100" max="200" value="0" />
         <div class="button_row">
-          <button onclick="reset()">Reset</button>
-          <button onclick="startSorting()">Start</button>
-          <button onclick="stopSorting()">Stop</button>
+          <button id="resetBtn">Reset</button>
+          <button id="startBtn">Start</button>
+          <button id="stopBtn">Stop</button>
         </div>
 
+      </div>
+      <div class="user_array">
+        <label for="userArray">Custom Array:</label>
+        <input type="text" id="userArray" placeholder="Enter numbers, separated by commas e.g 12,23,34,5,3,1,53,5" />
+        <button id="useArrayBtn">Use</button>
       </div>
 
       <div class="panels">
         <div class="box_container"></div>
 
         <div class="code-container">
+          <div class="tab">
+            <button class="tablinks" id="js_tab">JS</button>
+            <button class="tablinks" id="python_tab">Python</button>
+            <button class="tablinks" id="java_tab">Java</button>
+
+          </div>
           <pre>
-          <code id="algorithmCode" class="html"></code>
-        </pre>
+          <code id="algorithmCode" class="language-javascript"></code>
+          </pre>
         </div>
       </div>
-      <div class="results">
 
-      </div>
     </div>
-    <script src="./main.js"></script>
-      </body>
+    <script src="./utils.js" type="module"></script>
+    <script src="./main.js" type="module"></script>
+
+  </body>
 </html>

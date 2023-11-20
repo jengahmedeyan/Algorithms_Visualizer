@@ -1,25 +1,65 @@
-const numberOfBars = 30;
-const mainContainer = document.querySelector(".box_container");
-const bars = document.getElementsByClassName("bar");
-const algorithmCodeElement = document.getElementById("algorithmCode");
 
+import {
+  setBarHeight,
+  setBarColor,
+  resetBarColors,
+  convertArrayFromBars,
+  setBarsFromArray,
+  sleep, updateAlgorithmCode, highlightCode, algorithmCode, domElement
+} from './utils.js';
+let selectedAlgorithm;
+let speed, sortingTimeout;
+let numberOfBars = 30;
+let userProvidedArray = false;
 let isSortingInProgress = false;
-let sortingTimeout;
+let selectedLanguage = 'js';
+const  bars= document.getElementsByClassName("bar");
 
-const generateBars = () => {
-  for (let i = 0; i < numberOfBars; i++) {
+
+
+const generateBars = (arrayLength) => {
+  domElement.mainContainer.innerHTML = "";
+
+  const barsCount =numberOfBars || arrayLength;
+
+  for (let i = 0; i < barsCount; i++) {
     let span = document.createElement("span");
     span.setAttribute("class", "bar");
-    mainContainer.append(span);
+    domElement.mainContainer.append(span);
+  }
+};
+const useUserArray = () => {
+  const userArrayInput = domElement.userArray;
+  const userInput = userArrayInput.value.trim();
+
+  const userArray = userInput.split(',').map(num => parseInt(num, 10));
+
+  if (userArray.every(num => !isNaN(num))) {
+    numberOfBars = userArray.length;
+    userProvidedArray = true;
+    generateBars(userArray.length);
+    setBarsFromUserArray(userArray);
+  } else {
+    alert("Invalid input. Please enter a valid array of numbers separated by commas.");
+  }
+};
+
+const setBarsFromUserArray = (userArray) => {
+ const maxValue = Math.max(...userArray);
+
+
+  for (let i = 0; i < bars.length; i++) {
+    console.log(((userArray[i]/maxValue)*100))
+    bars[i].style.height = `${((userArray[i]/maxValue)*100)}%`;
   }
 };
 
 const setRandomBarHeights = () => {
-  for (let i = 0; i < bars.length; i++) {
-    const randomHeight = Math.round(Math.random() * 100);
-    const barValue = randomHeight;
-
-    bars[i].style.height = `${randomHeight}%`;
+  if(!userProvidedArray) {
+    for (let i = 0; i < bars.length; i++) {
+      const randomHeight = Math.round(Math.random() * 100);
+      setBarHeight(bars[i], randomHeight);
+    }
   }
 };
 
@@ -34,7 +74,8 @@ const resetColors = () => {
 };
 function resetResults() {
   const resultElement = document.querySelector(".results");
-  resultElement.innerHTML = "";
+  resultElement.remove();
+
 }
 const stopSorting = () => {
   clearTimeout(sortingTimeout);
@@ -54,22 +95,6 @@ const swapBars = (i, j) => {
   bars[j].style.height = temp;
 };
 
-async function highlightCode(code, lineIndex) {
-  const lines = code.split("\n");
-  let highlightedCode = "";
-
-  for (let i = 0; i < lines.length; i++) {
-    if (i === lineIndex) {
-      highlightedCode +=
-        '<span class="highlighted">' + lines[i] + "</span>\n";
-    } else {
-      highlightedCode += lines[i] + "\n";
-    }
-  }
-
-  algorithmCodeElement.innerHTML = highlightedCode;
-}
-
 function updateResults(
   algorithm,
   comparisons,
@@ -79,7 +104,9 @@ function updateResults(
   finalState
 ) {
   const container = document.querySelector(".container");
-  const resultsDiv = document.querySelector(".results");
+  const resultsDiv = document.createElement("div");
+  resultsDiv.setAttribute('class','results');
+
   resultsDiv.innerHTML = '<h2>Results</h2><div id="sortingResult"></div>';
   container.appendChild(resultsDiv);
 
@@ -90,7 +117,6 @@ function updateResults(
       <p> Algorithm: ${algorithm}</p>
       <p> Comparisons: ${comparisons} </p>
       <p> Swaps: ${swaps}</p>
-      <p> Time taken: ${timeTaken} milliseconds </p>
     </div>
     <div>
       <p>Unsorted Array: [${initialState.join(", ")}]</p>
@@ -101,51 +127,15 @@ function updateResults(
   sortingResultElement.innerHTML = resultText;
 }
 
-async function insertionSort(speed) {
-  const n = bars.length;
-
-  for (let i = 1; i < n; i++) {
-    let key = parseInt(bars[i].style.height);
-    let j = i - 1;
-
-    bars[i].style.backgroundColor = "red";
-
-    await new Promise(
-      (resolve) => (sortingTimeout = setTimeout(resolve, speed))
-    );
-
-    while (j >= 0 && parseInt(bars[j].style.height) > key) {
-      bars[j + 1].style.height = bars[j].style.height;
-      bars[j + 1].style.backgroundColor = "blue";
-
-      j = j - 1;
-
-      await new Promise(
-        (resolve) => (sortingTimeout = setTimeout(resolve, speed))
-      );
-    }
-
-    bars[j + 1].style.height = `${key}%`;
-    bars[i].style.backgroundColor = "black";
-
-    for (let k = 0; k < i; k++) {
-      bars[k].style.backgroundColor = "black";
-    }
-
-    await new Promise(
-      (resolve) => (sortingTimeout = setTimeout(resolve, speed))
-    );
-  }
-}
 
 const startSorting = () => {
-  const algorithm = document.getElementById("algorithmSelect").value;
-  const speed = getSortingSpeed();
+ selectedAlgorithm = domElement.selectedAlgorithm.value;
+  speed = getSortingSpeed();
 
   if (!isSortingInProgress) {
     isSortingInProgress = true;
 
-    switch (algorithm) {
+    switch (selectedAlgorithm) {
       case "bubble":
         startBubbleSort(speed);
         break;
@@ -154,6 +144,9 @@ const startSorting = () => {
         break;
       case "insertion":
         startInsertionSort(speed);
+        break;
+      case "merge":
+        startMergeSort(speed);
         break;
       default:
         console.error("Invalid algorithm");
@@ -174,33 +167,21 @@ async function startBubbleSort(speed) {
     for (let j = 0; j < n - i - 1 && isSortingInProgress; j++) {
       comparisons++;
 
-      bars[j].style.backgroundColor = "red";
-      bars[j + 1].style.backgroundColor = "blue";
+      setBarColor(bars[j], "red");
+      setBarColor(bars[j + 1], "blue");
 
-      await highlightCode(
-        `
-let n = array.length;//30
-for (let i = ${i}; i < n - 1; i++) {
-for (let j= ${j}; j < n - ${i} - 1; j++) {
-if (array[${j}] > array[${j}+1]) {
-  const temp = array[${j}];
-  array[${j}] = array[${j} + 1];
-  array[${j} + 1] = temp;
-}
-}
-}
-`,
-        j
-      );
+      const codeSnippet = algorithmCode['bubble'][selectedLanguage];
+
+      await highlightCode(codeSnippet, j);
 
       await new Promise(
         (resolve) => (sortingTimeout = setTimeout(resolve, speed))
       );
 
-      if (
-        parseInt(bars[j].style.height) >
-        parseInt(bars[j + 1].style.height)
-      ) {
+      const currentHeight = parseInt(bars[j].style.height);
+      const nextHeight = parseInt(bars[j + 1].style.height);
+
+      if (currentHeight > nextHeight) {
         swapBars(j, j + 1);
         swaps++;
       }
@@ -212,8 +193,11 @@ if (array[${j}] > array[${j}+1]) {
   const endTime = performance.now();
   const timeTaken = endTime - startTime;
   const finalState = Array.from(bars).map((bar) =>
-    parseInt(bar.style.height)
+      parseInt(bar.style.height)
   );
+
+
+
 
   isSortingInProgress = false;
   updateResults(
@@ -238,25 +222,14 @@ async function startSelectionSort(speed) {
   for (let i = 0; i < n - 1 && isSortingInProgress; i++) {
     let min_idx = i;
 
-    bars[i].style.backgroundColor = "red";
+    setBarColor(bars[i], "red");
 
     for (let j = i + 1; j < n && isSortingInProgress; j++) {
-      bars[j].style.backgroundColor = "blue";
+      setBarColor(bars[j], "blue");
 
-      await highlightCode(
-        `
-let n = array.length; //30
-for (let i = ${i}; i < n - 1; i++) {
-let min_idx = i;
-for (let j = i + 1; j < n; j++) {
-if  (array[j]) < array[min_idx]) {
-  min_idx = j;
-}
-}
-}
-`,
-        j
-      );
+      const codeSnippet = algorithmCode['selection'][selectedLanguage];
+
+      await highlightCode(codeSnippet, j);
 
       await new Promise(
         (resolve) => (sortingTimeout = setTimeout(resolve, speed))
@@ -268,10 +241,12 @@ if  (array[j]) < array[min_idx]) {
       ) {
         comparisons++;
         if (min_idx !== i) {
-          bars[min_idx].style.backgroundColor = "black";
+          setBarColor(bars[min_idx], "black");
         }
         min_idx = j;
       } else {
+        setBarColor(bars[j], "black");
+
         bars[j].style.backgroundColor = "black";
       }
     }
@@ -302,7 +277,6 @@ if  (array[j]) < array[min_idx]) {
   );
 }
 
-
 async function startInsertionSort(speed) {
   const n = bars.length;
   let comparisons = 0;
@@ -328,18 +302,9 @@ async function startInsertionSort(speed) {
       j--;
       swaps++;
 
-      await highlightCode(`
-        let n = array.length;
-        for (let i = 1; i < n; i++) {
-          let key = array[i];
-          let j = i - 1;
+      const codeSnippet = algorithmCode['insertion'][selectedLanguage];
 
-          while (j >= 0 && array[j] > key) {
-            array[j + 1] = array[j];
-            j--;
-          }
-        }
-      `, i);
+      await highlightCode(codeSnippet, i);
 
       await new Promise(resolve => setTimeout(resolve, speed));
     }
@@ -369,9 +334,131 @@ async function startInsertionSort(speed) {
   );
 }
 
+async function mergeSort(arr, left = 0, right = arr.length - 1) {
+  if (left >= right) return;
+
+  const mid = Math.floor((left + right) / 2);
+
+  await mergeSort(arr, left, mid);
+  await mergeSort(arr, mid + 1, right);
+
+  await merge(arr, left, mid, right);
+}
+
+async function merge(arr, left, mid, right) {
+  const leftArr = arr.slice(left, mid + 1);
+  const rightArr = arr.slice(mid + 1, right + 1);
+
+  let i = 0,
+      j = 0,
+      k = left;
+
+  while (i < leftArr.length && j < rightArr.length) {
+    if (leftArr[i] <= rightArr[j]) {
+      arr[k++] = leftArr[i++];
+    } else {
+      arr[k++] = rightArr[j++];
+    }
+    await visualizeMerge(arr, left, right, k - 1);
+  }
+
+  while (i < leftArr.length) {
+    arr[k++] = leftArr[i++];
+    await visualizeMerge(arr, left, right, k - 1);
+
+  }
+
+  while (j < rightArr.length) {
+    arr[k++] = rightArr[j++];
+    await visualizeMerge(arr, left, right, k - 1);
+
+  }
+}
+
+async function startMergeSort(speed) {
+  let comparisons = 0;
+  let swaps = 0;
+  let initialArray = Array.from(bars).map((bar) =>
+      parseInt(bar.style.height)
+  );
+  const barsArray = Array.from(bars).map((bar) =>
+      parseInt(bar.style.height)
+  );
+
+  const startTime = performance.now();
+  await mergeSort(barsArray);
+  const endTime = performance.now();
+  const timeTaken = endTime - startTime;
+
+  isSortingInProgress = false;
+  updateResults(
+      "Merge Sort",
+      comparisons,
+      swaps,
+      timeTaken.toFixed(2),
+      initialArray,
+      barsArray
+  );
+}
+async function visualizeMerge(arr, left, right, currentIndex) {
+  for (let i = left; i <= right; i++) {
+    setBarHeight(bars[i], arr[i]);
+    if (i === currentIndex) {
+      setBarColor(bars[i], "red");
+    } else {
+      setBarColor(bars[i], "blue");
+    }
+    await sleep(speed);
+  }
+}
 
 function getSortingSpeed() {
-  return document.getElementById("speedSlider").value;
+  return domElement.speedSlider.value;
 }
+
+
 generateBars();
+
 setRandomBarHeights();
+
+domElement.reset.addEventListener("click", reset);
+domElement.start.addEventListener("click", startSorting);
+domElement.stop.addEventListener("click", stopSorting);
+domElement.useArray.addEventListener("click", useUserArray);
+
+
+
+
+domElement.js.addEventListener("click", () => {
+  updateAlgorithmCode(domElement.selectedAlgorithm.value, "js");
+});
+
+domElement.python.addEventListener("click", () => {
+  updateAlgorithmCode(domElement.selectedAlgorithm.value, "python");
+});
+
+domElement.java.addEventListener("click", () => {
+  updateAlgorithmCode(domElement.selectedAlgorithm.value, "java");
+});
+domElement.how.addEventListener('click',()=>{
+
+  const codeElement = document.getElementById("algorithmCode");
+  const code = algorithmCode[domElement.selectedAlgorithm.value]['how'];
+
+  codeElement.innerHTML =code;
+
+
+});
+
+
+function displayAlgorithmCode(algorithm, language) {
+  const codeElement = document.getElementById("algorithmCode");
+  const codeSnippet = algorithmCode[algorithm][language];
+
+  codeElement.textContent = codeSnippet;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const defaultAlgorithm = domElement.selectedAlgorithm.value;
+  displayAlgorithmCode(defaultAlgorithm, 'js');
+});
